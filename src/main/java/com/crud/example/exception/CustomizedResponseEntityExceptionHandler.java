@@ -25,6 +25,14 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		System.out.println("in default error handler");
 		return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@ExceptionHandler(NullPointerException.class)
+	public final ResponseEntity<Object> handleNullPointerExceptionException(NullPointerException ex, WebRequest request) throws NullPointerException {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
+				request.getDescription(false));
+		System.out.println("in default error handler");
+		return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
 	@ExceptionHandler(UserNotFound.class)
 	public final ResponseEntity<Object> handleUserNotFoundException(UserNotFound ex, WebRequest request)

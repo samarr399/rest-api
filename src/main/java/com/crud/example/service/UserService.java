@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.crud.example.Debug;
 import com.crud.example.entity.User;
 import com.crud.example.exception.UserNotFound;
 import com.crud.example.repository.UserRepository;
@@ -48,10 +49,14 @@ public class UserService {
 	}
 
 	public boolean login(HashMap<String, String> map) {
-		User user = repository.findByName(map.get("username"));
-		boolean authenticate = encoder.matches(map.get("password"), user.getPassword());
-		if (!authenticate) {
-			throw new UserNotFound("username or password is invalid");
+		Optional<User> user = repository.findByName(map.get("username"));
+		Debug.sd(user);
+		if(!user.isPresent()) {
+			throw new UserNotFound("User with this username is not found.");
+		}
+		boolean authenticate = encoder.matches(map.get("password"), user.get().getPassword());
+		if (!authenticate || (user == null)) {
+			throw new UserNotFound("Password is incorrect.");
 		}
 		return authenticate;
 	}
