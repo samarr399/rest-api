@@ -26,34 +26,36 @@ import com.crud.example.service.UserService;
 public class UserController {
 	@Autowired
 	private UserService userService;
+
 	@GetMapping("/users")
-	public List<User> getAllUsers(){
+	public List<User> getAllUsers() {
 		return userService.findAll();
 	}
+
 	@GetMapping("/users/{id}")
 	public User getUser(@PathVariable Long id) {
 		User user = userService.findById(id);
-		if(user == null) {
+		if (user == null) {
 			throw new UserNotFound("id-" + id);
 		}
-		
+
 		return user;
 	}
-	
+
 	@PostMapping("/users")
 	public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
 		userService.save(user);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
-	
+
 	@DeleteMapping("/users/{id}")
 	public void delete(@PathVariable Long id) {
 		userService.delete(id);
 	}
-	
+
 	@PostMapping("/login")
-	@ResponseStatus(value=HttpStatus.OK)
+	@ResponseStatus(value = HttpStatus.OK)
 	public String login(@RequestBody HashMap<String, String> map) {
 		userService.login(map);
 		return "user logged in successfully";

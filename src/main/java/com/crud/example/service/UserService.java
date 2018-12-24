@@ -19,7 +19,7 @@ public class UserService {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private UserRepository repository;
-	private BCryptPasswordEncoder encoder =  new BCryptPasswordEncoder();
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 	public List<User> findAll() {
 		return repository.findAll();
@@ -50,7 +50,7 @@ public class UserService {
 	public boolean login(HashMap<String, String> map) {
 		User user = repository.findByName(map.get("username"));
 		boolean authenticate = encoder.matches(map.get("password"), user.getPassword());
-		if(!authenticate) {
+		if (!authenticate) {
 			throw new UserNotFound("username or password is invalid");
 		}
 		return authenticate;
